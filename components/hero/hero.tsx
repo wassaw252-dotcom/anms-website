@@ -2,6 +2,8 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
+import { Wordmark } from "../wordmark";
 import EngineeringCore from "./engineering-core";
 const subscribe = () => () => {};
 const getSnapshot = () => {
@@ -73,9 +75,7 @@ export function Hero() {
         animate={{ opacity: entering ? 0 : 1, scale: entering ? 1.45 : 1 }}
         transition={{ duration: 0.7, delay }}
       >
-        <span>
-          ANM<span>’s</span>
-        </span>
+        <Wordmark />
         <p>ADVANCING NEW MILESTONES</p>
       </motion.div>
       <motion.div
@@ -90,7 +90,7 @@ export function Hero() {
           <br />
           <span>
             ENGINEERED INTO
-            <br className="mobile-break" /> A SOLUTION.
+            <br /> A SOLUTION.
           </span>
         </h1>
         <p className="hero-description">
@@ -121,19 +121,17 @@ export function Hero() {
           >
             TRY US! <span aria-hidden="true">↗</span>
           </a>
-          <a className="text-link" href="#work">
+          <Link className="text-link" href="/what-we-build">
             SEE WHAT WE BUILD{" "}
             <span className="circle-arrow" aria-hidden="true">
-              ↓
+              →
             </span>
-          </a>
+          </Link>
         </div>
       </motion.div>
       <div className="hero-bottom">
         <span>01 / THE POSSIBILITIES</span>
-        <a href="#solutions">
-          SCROLL TO EXPLORE <span aria-hidden="true">↓</span>
-        </a>
+        <span>YOUR NEXT MILESTONE STARTS HERE</span>
         <span>SYSTEMS · PEOPLE · PROGRESS</span>
       </div>
       <div className="transition-flash" aria-hidden="true" />

@@ -1834,3 +1834,33 @@ a:hover {
     scale: 1;
   }
 }
+
+/* Separate entrance and company experiences. */
+.wordmark { display: block; width: 100%; height: auto; }
+.brand .wordmark { width: 126px; }
+.core-brand > .wordmark { width: clamp(250px, 38vw, 530px); margin: 0 auto; filter: drop-shadow(0 7px 15px #000); }
+.home-navigation { background: linear-gradient(#080a0be6, transparent); border: 0; backdrop-filter: none; pointer-events: none; }
+.home-navigation .brand { pointer-events: auto; }
+.hero { min-height: 870px; }
+.hero-content { top: 54%; }
+.company-page { padding-top: 98px; }
+.company-intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 7%; align-items: center; padding-block: 75px; }
+.company-intro h1 { font-size: clamp(32px, 4vw, 58px); letter-spacing: -.035em; margin-bottom: 26px; }
+.company-intro > div > p { max-width: 540px; }
+.company-monument { min-width: 0; padding: 70px 30px; border: 1px solid var(--line); border-right: 2px solid var(--gold); background: linear-gradient(120deg, #1e2325, #080a0b 65%); box-shadow: 18px 15px 60px #000; }
+.company-monument > p { font-size: 9px; letter-spacing: .23em; margin-top: 14px; color: var(--gold); }
+.company-monument > span { display: block; margin-top: 50px; font-size: 10px; letter-spacing: .16em; color: var(--muted); }
+@media (max-width: 800px) {
+  .company-page { padding-top: 80px; }
+  .company-intro { grid-template-columns: 1fr; gap: 35px; padding-block: 50px; }
+  .company-monument { padding: 35px; max-width: 480px; width: 100%; }
+  .company-monument > span { margin-top: 25px; }
+  .hero { min-height: 820px; }
+}
+@media (max-width: 480px) {
+  .core-brand > .wordmark { width: min(78%, 330px); }
+  .core-brand p { letter-spacing: .18em; font-size: 9px; }
+  .hero h1 { font-size: clamp(26px, 7.5vw, 33px); }
+  .hero-content { padding-inline: 18px; top: 51%; }
+  .company-intro .button { gap: 15px; padding-inline: 18px; font-size: 11px; }
+}

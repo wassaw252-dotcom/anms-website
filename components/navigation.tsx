@@ -6,7 +6,7 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   return (
     <header className="navigation">
-      <Brand />
+      <Brand engineered />
       <nav
         aria-label="Main navigation"
         className={open ? "nav-links open" : "nav-links"}
@@ -18,7 +18,7 @@ export function Navigation() {
           ["Work", "work"],
           ["About", "about"],
         ].map(([label, id]) => (
-          <a key={id} href={`/#${id}`} onClick={() => setOpen(false)}>
+          <a key={id} href={`/what-we-build#${id}`} onClick={() => setOpen(false)}>
             {label}
           </a>
         ))}
