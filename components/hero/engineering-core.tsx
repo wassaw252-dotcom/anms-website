@@ -35,6 +35,7 @@ export default function EngineeringCore({
       if (reduced.matches) draw(0);
     };
     const pointer = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || reduced.matches) return;
       mouse.x = (e.clientX / innerWidth - 0.5) * 18;
       mouse.y = (e.clientY / innerHeight - 0.5) * 10;
     };
@@ -43,14 +44,14 @@ export default function EngineeringCore({
       const dt = Math.min(now - last || 16, 40);
       last = now;
       if (!reduced.matches)
-        t += dt * (state.current.entering ? 0.001 : 0.00007);
+        t += dt * (state.current.entering ? 0.0002 : 0.000012);
       ctx.clearRect(0, 0, w, h);
       const mobile = w < 650;
       const radius =
-        Math.min(w * (mobile ? 0.47 : 0.3), h * 0.4) *
+        Math.min(w * (mobile ? 0.6 : 0.34), h * 0.33) *
         (state.current.entering ? 1.12 : 1);
       const cx = w / 2 + mouse.x,
-        cy = h * 0.46 + mouse.y;
+        cy = h * 0.38 + mouse.y;
       const project = (lat: number, lon: number) => {
         const x = Math.cos(lat) * Math.cos(lon + t),
           z = Math.cos(lat) * Math.sin(lon + t),
@@ -58,6 +59,23 @@ export default function EngineeringCore({
         return { x: cx + x * radius, y: cy + (y * 0.93 + z * 0.2) * radius, z };
       };
       ctx.lineWidth = 0.65;
+      const surface = ctx.createRadialGradient(cx - radius * .35, cy - radius * .6, 0, cx, cy, radius);
+      surface.addColorStop(0, "#263039");
+      surface.addColorStop(.5, "#0b1115");
+      surface.addColorStop(.95, "#020405");
+      surface.addColorStop(1, "#657078");
+      ctx.fillStyle = surface;
+      ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
+      // Stable, evenly distributed surface points rotate with the same projection.
+      const textureCount = mobile ? 1400 : 3200;
+      for (let i = 0; i < textureCount; i++) {
+        const lat = Math.asin(-1 + 2 * (i + .5) / textureCount), lon = i * 2.39996;
+        const p = project(lat, lon);
+        if (p.z < 0) continue;
+        const cluster = Math.sin(lon * 3 + Math.sin(lat * 7)) * Math.cos(lat * 9 + lon);
+        ctx.fillStyle = cluster > .18 ? `rgba(209,170,98,${.2 + p.z * .45})` : `rgba(123,149,166,${.08 + p.z * .16})`;
+        ctx.fillRect(p.x, p.y, cluster > .55 ? 1.5 : .8, 1);
+      }
       for (let lat = -Math.PI / 2 + 0.15; lat < Math.PI / 2; lat += 0.15) {
         ctx.beginPath();
         for (let i = 0; i <= 110; i++) {
@@ -65,7 +83,7 @@ export default function EngineeringCore({
           if (i === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
         }
-        ctx.strokeStyle = "rgba(180,161,116,.15)";
+        ctx.strokeStyle = "rgba(180,161,116,.07)";
         ctx.stroke();
       }
       for (let lon = 0; lon < Math.PI * 2; lon += Math.PI / 14) {
@@ -75,7 +93,7 @@ export default function EngineeringCore({
           if (i === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
         }
-        ctx.strokeStyle = "rgba(189,182,163,.13)";
+        ctx.strokeStyle = "rgba(189,182,163,.06)";
         ctx.stroke();
       }
       const count = mobile ? 64 : 135;
@@ -85,7 +103,7 @@ export default function EngineeringCore({
         const p = project(lat, lon);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.z > 0 ? 1.5 : 0.7, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(227,192,120,${p.z > 0 ? 0.65 : 0.2})`;
+        ctx.fillStyle = `rgba(227,192,120,${p.z > 0 ? .4 + .3 * Math.sin(t * 3 + i) ** 2 : .1})`;
         ctx.fill();
         if (i % 13 === 0 && p.z > 0) {
           ctx.beginPath();
@@ -99,7 +117,7 @@ export default function EngineeringCore({
       for (let orbit = 0; orbit < 4; orbit++) {
         ctx.save();
         ctx.translate(cx, cy);
-        ctx.rotate(-0.25 + orbit * 0.63);
+        ctx.rotate(-0.25 + orbit * 0.32 + t * (orbit % 2 ? .035 : -.025));
         ctx.beginPath();
         ctx.ellipse(
           0,
@@ -122,6 +140,19 @@ export default function EngineeringCore({
         ctx.arc(x, y, 2.2, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
+      }
+      // A restrained polar light and perspective floor tie the system to its environment.
+      const beam = ctx.createLinearGradient(0, cy - radius * 1.35, 0, cy + radius);
+      beam.addColorStop(0, "#e9bd6600"); beam.addColorStop(.22, "#ffe1a3aa"); beam.addColorStop(.5, "#d4aa4b11"); beam.addColorStop(1, "#d4aa4b00");
+      ctx.fillStyle = beam; ctx.fillRect(cx - .7, cy - radius * 1.35, 1.4, radius * 2.35);
+      for (let row = 0; row < 15; row++) {
+        ctx.beginPath();
+        for (let col = 0; col <= 64; col++) {
+          const x = col / 64 * w;
+          const y = h * .9 + row * row * .55 + Math.sin(col * .12 + t + row * .3) * (8 + row);
+          if (!col) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.strokeStyle = `rgba(194,152,76,${.06 + row * .008})`; ctx.stroke();
       }
       for (let i = 0; i < (mobile ? 20 : 48); i++) {
         let x = (Math.sin(i * 72.3) * 0.5 + 0.5) * w,

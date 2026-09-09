@@ -58,9 +58,7 @@ export function Hero() {
       </div>
       <div className="hero-side right">
         <span>
-          PRECISION
-          <br />
-          WITH PURPOSE
+          BUILD<br />AUTOMATE<br />SIMPLIFY<br />SCALE<br />TOGETHER
         </span>
         <i />
         <span>
@@ -69,6 +67,9 @@ export function Hero() {
           ENGINEERING
         </span>
       </div>
+      <div className="hero-coordinate" aria-hidden="true">01.5503° N<br />103.8198° E</div>
+      <div className="hero-possibilities" aria-hidden="true">FROM<br />PROBLEMS<br />TO<br />POSSIBILITIES</div>
+      <div className="hero-marker" aria-hidden="true">01<span>02</span><span>03</span><span>04</span></div>
       <motion.div
         className="core-brand"
         initial={false}
@@ -94,9 +95,8 @@ export function Hero() {
           </span>
         </h1>
         <p className="hero-description">
-          From a single idea to complex business operations,
-          <br className="desktop-break" /> ANM’s engineers systems designed
-          around what you need.
+          We build business systems engineering that make your company better —
+          <br className="desktop-break" /> and help individuals turn ideas into real solutions.
         </p>
         <div className="hero-actions">
           <a
@@ -135,6 +135,14 @@ export function Hero() {
         <span>SYSTEMS · PEOPLE · PROGRESS</span>
       </div>
       <div className="transition-flash" aria-hidden="true" />
+      <div className="home-audiences">
+        {[
+          ["INDIVIDUALS", "Ideas into reality", "M16 21a7 7 0 1 0 0-14 7 7 0 0 0 0 14M4 39v-5c0-13 24-13 24 0v5M29 9c9 0 9 12 2 13M33 27c6 1 9 5 9 12"],
+          ["BUSINESSES", "Operate smarter", "M8 40V13h14V4h15v36M4 40h38M13 19h3m-3 7h3m-3 7h3M27 10h4m-4 8h4m-4 8h4m-4 7h4"],
+          ["GROWING COMPANIES", "Scale efficiently", "M5 40h37M9 36V26h7v10m6 0V19h7v17m6 0V10h7v26M7 19 21 7l7 5L41 2m-9 0h9v9"],
+          ["ENTERPRISE", "Build for what’s next", "M15 30C14 16 26 5 41 4c0 15-10 28-25 28L9 40l1-12-6-3 12-8M24 13a4 4 0 1 0 8 0 4 4 0 0 0-8 0M8 34l-5 8m12-4-3 6"],
+        ].map(([title, copy, path]) => <div key={title}><svg viewBox="0 0 48 48" aria-hidden="true"><path d={path} /></svg><h2>{title}</h2><p>{copy}</p></div>)}
+      </div>
     </section>
   );
 }

@@ -33,11 +33,14 @@ export default function WhatWeBuild() {
             <h1>REAL PROBLEMS.<br />CUSTOM SYSTEMS.<br /><span className="gold-text">LASTING PROGRESS.</span></h1>
             <p>From a single idea to complex business operations, ANM’s engineers systems designed around what you need.</p>
             <Link href="/discovery" className="button gold">TELL US YOUR PROBLEM <span aria-hidden="true">↗</span></Link>
+            <a className="button company-explore" href="#capabilities">EXPLORE WHAT’S POSSIBLE <span aria-hidden="true">→</span></a>
           </div>
           <div className="company-monument" aria-hidden="true">
             <Wordmark />
             <p>ADVANCING NEW MILESTONES</p>
             <span>PEOPLE<br />PROCESSES<br />TECHNOLOGY</span>
+            <div className="architecture-windows" />
+            <div className="architecture-wing" />
           </div>
         </section>
         <div className="audiences wrap">

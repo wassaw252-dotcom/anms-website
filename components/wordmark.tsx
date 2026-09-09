@@ -14,7 +14,7 @@ export function Wordmark() {
           <stop offset="1" stopColor="#896031" />
         </linearGradient>
       </defs>
-      <g fill={`url(#${gold})`} stroke="#e3c38b" strokeWidth=".7" strokeLinejoin="bevel">
+      <g fill={`url(#${gold})`} stroke="#e3c38b" strokeWidth=".7" strokeLinejoin="bevel" style={{ filter: "drop-shadow(2px 3px 0 #5a3e20) drop-shadow(0 0 5px #d6a95c33)" }}>
         <path d="M6 111 64 9 84 9 142 111 115 111 74 37 33 111Z" />
         <path d="M64 65 69 83 87 88 69 93 64 110 59 93 43 88 59 83Z" />
         <path d="M146 111V9H169L235 77V9H259V111H236L170 44V111Z" />
