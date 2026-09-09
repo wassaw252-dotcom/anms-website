@@ -48,7 +48,7 @@ export default function EngineeringCore({
       ctx.clearRect(0, 0, w, h);
       const mobile = w < 650;
       const radius =
-        Math.min(w * (mobile ? 0.6 : 0.34), h * 0.33) *
+        Math.min(w * (mobile ? 0.32 : 0.29), h * 0.33) *
         (state.current.entering ? 1.12 : 1);
       const cx = w / 2 + mouse.x,
         cy = h * 0.38 + mouse.y;
@@ -59,6 +59,65 @@ export default function EngineeringCore({
         return { x: cx + x * radius, y: cy + (y * 0.93 + z * 0.2) * radius, z };
       };
       ctx.lineWidth = 0.65;
+      // Each path has its own aspect, tilt, centre, phase and angular speed.
+      // Rear half-arcs are painted before the opaque globe; front halves after it.
+      const orbits = [
+        [1.72, .27, -.30, -.08, .14, .16, 0, 5.8],
+        [1.57, .42, .24, .09, -.12, -.11, .7, 5.4],
+        [1.43, .68, -.67, -.12, -.03, .08, 1.8, 4.8],
+        [1.34, .47, 1.10, .07, -.12, -.07, 2.5, 5.1],
+        [1.84, .19, -.16, .06, .38, .13, 3.1, 4.7],
+        [1.49, .76, .53, -.04, -.13, -.09, 4.4, 5.7],
+        [1.64, .35, -.47, .08, -.30, .06, 5.1, 4.4],
+        [1.22, .92, -.14, -.07, -.09, -.05, 1.1, 4.9],
+      ];
+      const drawOrbits = (front: boolean) => {
+        orbits.forEach(([a, b, tilt, ox, oy, speed, phase, span], index) => {
+          const rotation = tilt + t * speed;
+          const point = (theta: number) => {
+            const x = Math.cos(theta) * radius * a;
+            const y = Math.sin(theta) * radius * b;
+            return {
+              x: cx + radius * ox + x * Math.cos(rotation) - y * Math.sin(rotation),
+              y: cy + radius * oy + x * Math.sin(rotation) + y * Math.cos(rotation),
+              front: Math.sin(theta) >= 0,
+            };
+          };
+          ctx.save();
+          ctx.lineWidth = front ? (index === 0 ? 1.2 : .7) : .55;
+          const alpha = front ? (state.current.active ? .66 : .42) : .19;
+          ctx.strokeStyle = index % 3 === 2 ? `rgba(210,220,223,${alpha})` : `rgba(220,179,106,${alpha})`;
+          ctx.beginPath();
+          let pen = false;
+          const steps = mobile ? 80 : 130;
+          for (let step = 0; step <= steps; step++) {
+            const p = point(phase + step / steps * span);
+            if (p.front !== front) { pen = false; continue; }
+            if (pen) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y);
+            pen = true;
+          }
+          ctx.stroke();
+          // Fixed trajectory markers and travelling data lights share the same depth.
+          for (let marker = 0; marker < 3; marker++) {
+            const theta = marker === 0
+              ? phase + (t * (index % 2 ? -.65 : .85) + index + 1000) % span
+              : phase + span * marker / 3;
+            const p = point(theta);
+            if (p.front !== front) continue;
+            ctx.shadowColor = "#f5cd83";
+            ctx.shadowBlur = marker === 0 ? 12 : 4;
+            ctx.fillStyle = `rgba(255,224,166,${front ? .65 + .25 * Math.sin(t * 2 + index) ** 2 : .3})`;
+            ctx.beginPath(); ctx.arc(p.x, p.y, marker === 0 ? 2 : 1, 0, Math.PI * 2); ctx.fill();
+            if (marker === 1 && !mobile) {
+              ctx.shadowBlur = 0;
+              ctx.beginPath(); ctx.moveTo(p.x, p.y - 11); ctx.lineTo(p.x, p.y + 11);
+              ctx.moveTo(p.x - 4, p.y); ctx.lineTo(p.x + 4, p.y); ctx.stroke();
+            }
+          }
+          ctx.restore();
+        });
+      };
+      drawOrbits(false);
       const surface = ctx.createRadialGradient(cx - radius * .35, cy - radius * .6, 0, cx, cy, radius);
       surface.addColorStop(0, "#263039");
       surface.addColorStop(.5, "#0b1115");
@@ -114,37 +173,30 @@ export default function EngineeringCore({
           ctx.stroke();
         }
       }
-      for (let orbit = 0; orbit < 4; orbit++) {
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(-0.25 + orbit * 0.32 + t * (orbit % 2 ? .035 : -.025));
+      drawOrbits(true);
+      // Sparse suspended wireframe fragments, independent of the globe rotation.
+      for (let i = 0; i < (mobile ? 3 : 5); i++) {
+        const angle = i * 1.31 + .4;
+        const x = cx + Math.cos(angle) * radius * 1.48;
+        const y = cy + Math.sin(angle) * radius * 1.18;
+        const size = mobile ? 7 : 12 + i * 2;
+        ctx.save(); ctx.translate(x, y);
+        ctx.rotate(angle + Math.sin(t * .4 + i) * .12);
+        ctx.strokeStyle = "rgba(224,194,134,.48)";
+        ctx.lineWidth = .7;
         ctx.beginPath();
-        ctx.ellipse(
-          0,
-          0,
-          radius * (1.13 + orbit * 0.07),
-          radius * (0.3 + orbit * 0.05),
-          0,
-          0,
-          Math.PI * 2,
-        );
-        ctx.strokeStyle = `rgba(216,180,108,${state.current.active ? 0.55 : 0.25})`;
-        ctx.stroke();
-        const theta = t * (orbit % 2 ? 1 : -1) + orbit * 1.9;
-        const x = Math.cos(theta) * radius * (1.13 + orbit * 0.07),
-          y = Math.sin(theta) * radius * (0.3 + orbit * 0.05);
-        ctx.shadowColor = "#e9c67f";
-        ctx.shadowBlur = 12;
-        ctx.fillStyle = "#eed19a";
-        ctx.beginPath();
-        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+        ctx.moveTo(-size, 0); ctx.lineTo(0, -size * 1.5);
+        ctx.lineTo(size, 0); ctx.lineTo(0, size * 1.5);
+        ctx.closePath(); ctx.moveTo(-size, 0); ctx.lineTo(size, 0);
+        ctx.lineTo(0, -size * 1.5); ctx.lineTo(0, size * 1.5);
+        ctx.stroke(); ctx.restore();
       }
       // A restrained polar light and perspective floor tie the system to its environment.
       const beam = ctx.createLinearGradient(0, cy - radius * 1.35, 0, cy + radius);
       beam.addColorStop(0, "#e9bd6600"); beam.addColorStop(.22, "#ffe1a3aa"); beam.addColorStop(.5, "#d4aa4b11"); beam.addColorStop(1, "#d4aa4b00");
+      ctx.globalAlpha = .75 + .15 * Math.sin(t * 2);
       ctx.fillStyle = beam; ctx.fillRect(cx - .7, cy - radius * 1.35, 1.4, radius * 2.35);
+      ctx.globalAlpha = 1;
       for (let row = 0; row < 15; row++) {
         ctx.beginPath();
         for (let col = 0; col <= 64; col++) {
