@@ -1894,9 +1894,12 @@ a:hover {
 .home-footer p { letter-spacing: .35em; font-size: 12px; margin: 0; }
 .home-footer small { color: #888; font-size: 9px; letter-spacing: .15em; }
 .approved-background { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: #000; }
-.approved-background-stage { position: absolute; inset: 5%; }
-.hero.approved-hero { background: #000; height: clamp(1080px,137.5vw,1800px); }
-.approved-hero .core-brand { top: 26.5%; }
+.approved-background-stage { position: absolute; left: 50%; top: calc(50% - var(--scene-lift)); width: 90%; height: 90%; transform: translate(-50%, -50%); }
+.hero.approved-hero { --scene-lift: clamp(24px, 3vw, 48px); background: #000; height: clamp(1080px,137.5vw,1800px); container-type: size; }
+/* Match the centered 1024 × 1536 contain-fit scene, including its approved
+   1.03 display zoom. The wordmark follows the cleared globe center (512, 440). */
+.hero.approved-hero .core-brand { top: calc(50% - min(19.7953125cqh, 29.69296875cqw) - var(--scene-lift)); translate: 0 -50%; }
+.hero.approved-hero .core-brand > .wordmark { width: min(46.8cqw, 31.2cqh); }
 .approved-hero .hero-content { top: 51%; }
 .approved-hero h1 { font-weight: 300; }
 .approved-hero h1 > span { font-weight: 400; }
@@ -1915,7 +1918,12 @@ a:hover {
 .reference-navigation .menu-button { display: block; }
 @media(min-width:801px) { .reference-navigation .nav-links.open { display: flex; } }
 @media(max-width:800px) { .approved-hero .hero-system-label { display: none; } .hero.approved-hero { height: 1140px; } }
-@media(max-width:600px) { .approved-background-stage { inset: 3%; } }
+@media(max-width:600px) {
+ .approved-background-stage { width: 94%; height: 94%; }
+ .hero.approved-hero { --scene-lift: 40px; }
+ .hero.approved-hero .core-brand { top: calc(50% - min(20.67510417cqh, 31.01265625cqw) - var(--scene-lift)); }
+ .hero.approved-hero .core-brand > .wordmark { width: min(48.88cqw, 32.58666667cqh); }
+}
 @media(max-width:480px) { .hero.approved-hero { height: 1130px; } .approved-hero .core-brand { top: 24%; } .approved-hero .hero-content { top: 43%; } .approved-scroll { top: 71%; font-size: 8px; gap: 10px; } .approved-scroll i { height: 20px; } }
 .company-page { background: #080d10; overflow: clip; }
 .company-intro { position: relative; min-height: 600px; grid-template-columns: 1fr 1fr; gap: 4%; padding-block: 85px; isolation: isolate; }
