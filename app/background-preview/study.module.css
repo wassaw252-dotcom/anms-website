@@ -1,0 +1,3 @@
+.scene { position: relative; isolation: isolate; overflow: hidden; width: 100%; min-height: 100svh; height: max(100svh, 135vw); max-height: 1800px; background: #020405; }
+.scene :global(.background-study-canvas) { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+@media (max-width: 600px) { .scene { height: max(100svh, 155vw); max-height: none; } }
