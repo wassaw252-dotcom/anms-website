@@ -2,22 +2,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Brand } from "./brand";
-export function Navigation() {
+export function Navigation({ reference = false }: { reference?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <header className="navigation">
+    <header className={`navigation ${reference ? "reference-navigation" : ""}`}>
       <Brand engineered />
       <nav
         aria-label="Main navigation"
         className={open ? "nav-links open" : "nav-links"}
       >
-        {[
+        {(reference ? [["Solutions", "solutions"], ["How It Works", "how-it-works"], ["Capabilities", "capabilities"], ["Work", "work"], ["About", "about"]] : [
           ["Solutions", "solutions"],
           ["Capabilities", "capabilities"],
           ["How It Works", "how-it-works"],
           ["Work", "work"],
           ["About", "about"],
-        ].map(([label, id]) => (
+        ]).map(([label, id]) => (
           <a key={id} href={`/what-we-build#${id}`} onClick={() => setOpen(false)}>
             {label}
           </a>

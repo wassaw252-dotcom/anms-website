@@ -8,9 +8,9 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <Navigation />
+      <Navigation reference />
       <main id="main"><Hero /></main>
-      <footer className="home-footer wrap"><Brand engineered /><p>IDEAS × SYSTEMS × PROGRESS</p><small>A BETTER TOMORROW.<br />TOGETHER.</small></footer>
+      <footer className="home-footer wrap"><Brand engineered /><p>IDEAS × SYSTEMS × PROGRESS</p><small>A BETTER<br />TOMORROW,<br />TOGETHER.</small></footer>
     </>
   );
 }

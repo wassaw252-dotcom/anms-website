@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { Wordmark } from "../wordmark";
-import EngineeringCore from "./engineering-core";
+import { ApprovedBackground } from "./approved-background";
 const subscribe = () => () => {};
 const getSnapshot = () => {
   try {
@@ -36,11 +36,10 @@ export function Hero() {
   const delay = reduced || returning ? 0 : 0.25;
   return (
     <section
-      className={`hero ${entering ? "entering" : ""}`}
+      className={`hero approved-hero ${active ? "cta-active" : ""} ${entering ? "entering" : ""}`}
       aria-labelledby="hero-title"
     >
-      <div className="hero-grid" />
-      <EngineeringCore active={active} entering={entering} />
+      <ApprovedBackground />
       <div className="hero-side left">
         <span>
           PEOPLE
@@ -62,14 +61,13 @@ export function Hero() {
         </span>
         <i />
         <span>
-          BUSINESS SYSTEMS
-          <br />
-          ENGINEERING
+          REAL<br />PROBLEMS<br />PRACTICAL<br />SOLUTIONS<br />LASTING<br />PROGRESS
         </span>
       </div>
       <div className="hero-coordinate" aria-hidden="true">01.5503° N<br />103.8198° E</div>
       <div className="hero-possibilities" aria-hidden="true">FROM<br />PROBLEMS<br />TO<br />POSSIBILITIES</div>
-      <div className="hero-marker" aria-hidden="true">01<span>02</span><span>03</span><span>04</span></div>
+      <div className="hero-marker" aria-hidden="true">01<hr /><span>02</span><span>03</span><span>04</span><span>05</span></div>
+      <div className="hero-system-label" aria-hidden="true">{"// SYSTEMS"}<br />{"// PEOPLE"}<br />{"// PROGRESS"}</div>
       <motion.div
         className="core-brand"
         initial={false}
@@ -119,23 +117,19 @@ export function Hero() {
             }}
             aria-disabled={entering}
           >
-            TRY US! <span aria-hidden="true">↗</span>
+            TRY US! <span aria-hidden="true">→</span>
           </a>
           <Link className="text-link" href="/what-we-build">
             SEE WHAT WE BUILD{" "}
             <span className="circle-arrow" aria-hidden="true">
-              →
+              ▶
             </span>
           </Link>
         </div>
       </motion.div>
-      <div className="hero-bottom">
-        <span>01 / THE POSSIBILITIES</span>
-        <span>YOUR NEXT MILESTONE STARTS HERE</span>
-        <span>SYSTEMS · PEOPLE · PROGRESS</span>
-      </div>
+      <a className="approved-scroll" href="#home-audiences"><span>SCROLL TO EXPLORE</span><i /></a>
       <div className="transition-flash" aria-hidden="true" />
-      <div className="home-audiences">
+      <div className="home-audiences" id="home-audiences">
         {[
           ["INDIVIDUALS", "Ideas into reality", "M16 21a7 7 0 1 0 0-14 7 7 0 0 0 0 14M4 39v-5c0-13 24-13 24 0v5M29 9c9 0 9 12 2 13M33 27c6 1 9 5 9 12"],
           ["BUSINESSES", "Operate smarter", "M8 40V13h14V4h15v36M4 40h38M13 19h3m-3 7h3m-3 7h3M27 10h4m-4 8h4m-4 8h4m-4 7h4"],
